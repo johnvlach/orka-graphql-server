@@ -4,6 +4,7 @@ const { buildSchema } = require('graphql');
 module.exports = buildSchema(`
   type Query {
     author(id: Int): Author
+    book(title: String): Book
   }
 
   type Author {

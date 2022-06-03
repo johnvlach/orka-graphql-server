@@ -1,28 +1,38 @@
 const { authors, books } = require('./data');
 
+const fetchData = async () => ({
+  author: async (args) => await getAuthor(args.id),
+  book: async (args) => await getBook(args.title)
+});
+
 const getAuthor = async id => {
-  const user = authors.filter(u => u.id == id)[0];
+  const author = authors.filter(u => u.id == id)[0];
   return {
-    author: () => {
-      return {
-        id: () => user.id,
-        name: () => user.name,
-        surname: () => user.surname,
-        address: {
-          street: () => user.address.street,
-          number: () => user.address.number,
-          postalCode: () => user.address.postalCode
-        },
-        books: () => {
-          const filteredBooks = books.filter(b => b.authorId == id);
-          return filteredBooks.map(b => ({
-            title: () => b.title,
-            year: () => b.year
-          }))
-        }
-      }
+    id: () => author.id,
+    name: () => author.name,
+    surname: () => author.surname,
+    address: {
+      street: () => author.address.street,
+      number: () => author.address.number,
+      postalCode: () => author.address.postalCode
+    },
+    books: () => {
+      const filteredBooks = books.filter(b => b.authorId == id);
+      return filteredBooks.map(b => ({
+        title: () => b.title,
+        year: () => b.year
+      }))
     }
   }
 };
 
-module.exports = { getAuthor }
+
+getBook = async title => {
+  const book = books.filter(b => b.title == title)[0];
+  return {
+    title: () => book.title,
+    year: () => book.year
+  }
+}
+
+module.exports = { fetchData }
