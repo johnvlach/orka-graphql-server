@@ -3,6 +3,7 @@ const { authors, books } = require('./data');
 const fetchData = async () => ({
   author: async (args) => await getAuthor(args.id),
   book: async (args) => await getBook(args.title)
+  // what if we want to have a list of authors with their books -> N + 1 problem
 });
 
 const getAuthor = async id => {
@@ -11,13 +12,13 @@ const getAuthor = async id => {
     id: () => author.id,
     name: () => author.name,
     surname: () => author.surname,
-    address: {
+    address: () => ({
       street: () => author.address.street,
       number: () => author.address.number,
       postalCode: () => author.address.postalCode
-    },
-    books: () => {
-      const filteredBooks = books.filter(b => b.authorId == id);
+    }),
+    books: async () => {
+      const filteredBooks = await books.filter(b => b.authorId == id);
       return filteredBooks.map(b => ({
         title: () => b.title,
         year: () => b.year
